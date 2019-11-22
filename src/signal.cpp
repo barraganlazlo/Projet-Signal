@@ -8,7 +8,7 @@
 #define NB_NOTES 7
 
 using namespace std;
-void insert_note(double *data, double t1, double t2, double freq, int sampling_freq, double volume);
+void sin_note(double *data, double t1, double t2, double freq, int sampling_freq, double volume);
 int char2real(unsigned char *s_char,double *s_real,int N);
 int real2char(unsigned char *s_char,double *s_real,int N);
 void DFT(double *signal, double *partie_reelle, double *partie_imaginaire, int N);
@@ -31,7 +31,7 @@ void write_la(){
     Wave wave(data8, size, nb_channels, sampling_freq);
     wave.write("sounds/la.wav");
 }
-void insert_note(double *data, double t1, double t2, double freq, int sampling_freq,double amplitude){ //volume entre 0 et 1
+void sin_note(double *data, double t1, double t2, double freq, int sampling_freq,double amplitude){ //volume entre 0 et 1
     for(int i=0;i<(t2-t1)*sampling_freq; i++){
         data[i] = sin((i * M_PI* 2 * freq)/sampling_freq);
     }
