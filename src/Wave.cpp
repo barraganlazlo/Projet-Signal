@@ -423,7 +423,7 @@ void Wave::write(char* fileName) {
     exit(-1);
   }
 
-  cout<<"Fin �criture du header\n";
+  cout<<"Fin écriture du header\n";
   //LECTURE DES DONNEES
   switch (depth) {
     case 8:

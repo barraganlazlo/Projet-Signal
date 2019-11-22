@@ -9,12 +9,17 @@
 
 using namespace std;
 void insert_note(double *data, double t1, double t2, double freq, int sampling_freq, double volume);
-int char2real(char *s_char,double *s_real,int N);
-int real2char(char *s_char,double *s_real,int N);
+int char2real(unsigned char *s_char,double *s_real,int N);
+int real2char(unsigned char *s_char,double *s_real,int N);
 void DFT(double *signal, double *partie_reelle, double *partie_imaginaire, int N);
 void IDFT(double *signal, double *partie_reelle, double *partie_imaginaire, int N);
 int FFT(int dir,int m,double *x,double *y);
+void write_la();
 int main(){
+    write_la();
+
+}
+void write_la(){
     double sample_time = 6.0; // en secondes
     int sampling_freq = 44100;
 	int nb_channels = 1;
@@ -22,14 +27,13 @@ int main(){
     unsigned char data8[size];
     double data[size];
     insert_note(data,0.0,6.0,LA,sampling_freq,0.8);
-    real2char((char*)data8,data,size);
+    real2char(data8,data,size);
     Wave wave(data8, size, nb_channels, sampling_freq);
     wave.write("sounds/la.wav");
-
 }
-void insert_note(double *data, double t1, double t2, double freq, int sampling_freq,double volume){ //volume entre 0 et 1
-    for(int i=(int) t1*sampling_freq;i<t2*sampling_freq; i++){
-        data[i] = volume * sin(i * M_PI_2 * freq/sampling_freq);
+void insert_note(double *data, double t1, double t2, double freq, int sampling_freq,double amplitude){ //volume entre 0 et 1
+    for(int i=0;i<(t2-t1)*sampling_freq; i++){
+        data[i] = sin((i * M_PI* 2 * freq)/sampling_freq);
     }
 }
 void DFT(double *signal, double *partie_reelle, double *partie_imaginaire, int N){
@@ -38,17 +42,17 @@ void DFT(double *signal, double *partie_reelle, double *partie_imaginaire, int N
     for(int k=0;k<N;k++){
         partie_reelle[k]=0;
         for (int n=0 ; n<N ; ++n){
-            partie_reelle[k] += signal[n] * cos(n * k * M_PI_2 / N);
+            partie_reelle[k] += signal[n] * cos(n * k * M_PI * 2 / N);
         } 
         partie_imaginaire[k]=0;
         for (int n=0 ; n<N ; ++n){
-            partie_imaginaire[k] -= signal[n] * cos(n * k * M_PI_2 / N);
+            partie_imaginaire[k] -= signal[n] * cos(n * k *  M_PI *2 / N);
         } 
     }
 }
-int char2real(char *s_char,double *s_real,int N){
+int char2real(unsigned char *s_char,double *s_real,int N){
     int i;
-    char *ptc;
+    unsigned char *ptc;
     double *pt,*fin;
     pt=s_real;
     ptc=s_char;
@@ -58,9 +62,9 @@ int char2real(char *s_char,double *s_real,int N){
     }
     return 1;
 }
-int real2char(char *s_char,double *s_real,int N){
+int real2char(unsigned char *s_char,double *s_real,int N){
     int i;
-    char *ptc;
+    unsigned char *ptc;
     double *pt,*fin, valeur;
     pt=s_real;
     ptc=s_char;
@@ -71,7 +75,7 @@ int real2char(char *s_char,double *s_real,int N){
         valeur*=127.5;
         valeur = valeur>255.0 ? 255.0 : valeur; 
         valeur = valeur<0.0 ? 0.0 : valeur;
-        (*ptc++) =(char) floor(valeur);
+        (*ptc++) =(unsigned char) floor(valeur);
     }
     return 1;
 }
